@@ -6,8 +6,11 @@ class App extends Component {
         return (
             <div className="App">
                 <h1>Image to ASCII</h1>
+                <div id="control-panel">
+                    <input type="file" id="img-upload" name></input>
+                </div>
             </div>
-        )
+        );
     }
 }
 
