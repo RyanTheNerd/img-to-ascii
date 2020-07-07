@@ -1,5 +1,6 @@
 const path = require("path");
 const webpack = require("webpack");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
     entry: "./src/init.js",
@@ -18,8 +19,26 @@ module.exports = {
             {
                 test: /\.css$/,     // Match all css files
 
-                // style-loader injects css, css-loader interprets imports
-                use: ["style-loader", "css-loader"]     
+                // MiniCss outputs seperate styles.css Include & Exclude allow CSS Modules and Globals
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    {
+                      loader: 'css-loader',
+                      options: {
+                        importLoaders: 1,
+                        modules: true
+                      }
+                    }
+                  ],
+                  include: /\.module\.css$/
+            },
+            {
+                test: /\.css$/,
+                use: [
+                   MiniCssExtractPlugin.loader,
+                  'css-loader'
+                ],
+                exclude: /\.module\.css$/
             }
         ]
     },
@@ -36,5 +55,5 @@ module.exports = {
         hotOnly: true   // Use the hot module replacement plugin
     },
     // hot module replacement plugin allows the page to refresh automagically
-    plugins: [new webpack.HotModuleReplacementPlugin()]
+    plugins: [new webpack.HotModuleReplacementPlugin(), new MiniCssExtractPlugin()]
 };
