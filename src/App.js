@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "./Style.css";
+import './css/styles.css';
 
 const placeholder = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQYV2NgAAIAAAUAAarVyFEAAAAASUVORK5CYII=";
 
