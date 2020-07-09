@@ -1,5 +1,2 @@
-body {
-    color: white;
-    background-color: black;
-    text-align: center;
-  }
+@import "base/_variables.css";
+@import "modules/_header.css";
