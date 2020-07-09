@@ -27,11 +27,11 @@ class App extends Component {
     }
     render() {
         return (
-            <div className="App">
-                <h1 className="foo">Image to ASCII</h1>
+            <div className="App">                
                 <div id="container">
-                    <div id="control-panel">
-                        <input type="file" id="img-upload" name></input>
+                    <div className="control-panel" id="control-panel">
+                        <header className="site-header">Image To Ascii</header>
+                        <input className="img-upload" type="file" id="img-upload" name></input>
                         <label for="columns">Columns: </label>
                         <input type="range" min="80" max="800" id="columns" name="columns"></input>
                     </div>
