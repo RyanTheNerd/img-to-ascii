@@ -16,6 +16,7 @@ class App extends Component {
 
         this.state = {
             columns: 80,
+            charWidth: this.testChar.clientWidth,
             charHeight: this.testChar.clientHeight,
             charRatio: this.testChar.clientWidth / this.testChar.clientHeight,
             ASCII: "Upload an image to begin",
@@ -29,14 +30,26 @@ class App extends Component {
             columns: event.target.value,
         })
     }
-    handleImageUpload(originalImage) {
+    handleImageUpload(event) {
+
+    }
+    drawInputToCanvas(inputImage) {
         // Set the canvas so that the text becomes the same size as the input image
         let scaledImage = {
             width: this.state.columns,
             height: this.state.charHeight * this.state.charRatio,
         }
-        this.canvas.width = this.image.width / this.testChar.clientWidth;
-        this.canvas.height = this.image.height / this.testChar.clientHeight;
+        this.canvas.width = this.state.columns;
+        this.canvas.height = this.canvas.width * 
+        // Ratio of height to width of input image
+        (inputImage.height / inputImage.width)  *
+        // Ratio of height to width of char
+        (1/this.state.charRatio);
+
+        this.ctx.drawImage(inputImage, 0, 0, scaledImage.width, scaledImage.height);
+        this.setState({
+            outputImageData: this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height),
+        });
     }
     render() {
         return (
