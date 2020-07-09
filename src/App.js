@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import './css/styles.css';
 
-const placeholder = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAC0lEQVQYV2NgAAIAAAUAAarVyFEAAAAASUVORK5CYII=";
 
 class App extends Component {
     constructor(props) {
@@ -10,41 +9,54 @@ class App extends Component {
         this.canvas = document.createElement("canvas");
         this.ctx = this.canvas.getContext('2d');
 
-        // Create a test character to get the width from
-        this.testChar = document.createElement("pre");
 
+        this.testChar = document.getElementById("#test-char");
+        console.log(this.testChar.clientWidth);
 
         this.state = {
             columns: 80,
             charWidth: this.testChar.clientWidth,
             charHeight: this.testChar.clientHeight,
             charRatio: this.testChar.clientWidth / this.testChar.clientHeight,
+            inputImage: new Image(),
             ASCII: "Upload an image to begin",
-            inputImageData: placeholder,
-            outputImageData: placeholder,
         }
         this.handleColumns = this.handleColumns.bind(this);
+        this.handleImageUpload = this.handleImageUpload.bind(this);
+
+        this.fileInput = React.createRef();
     }
     handleColumns(event) {
         this.setState({
             columns: event.target.value,
         })
     }
-    handleImageUpload(event) {
+    handleImageUpload() {
+        let file = this.fileInput.current.files[0];
+        let reader = new FileReader();
+        let image = this.state.inputImage;
+        reader.onloadend = () => {
+            image.onload = () => {
+                this.drawInputToCanvas();
+            }
+            image.onload.bind(this);
+            image.src = reader.result;
+        }
 
+        if(file) {
+            reader.readAsDataURL(file);
+        }
     }
-    drawInputToCanvas(inputImage) {
+    drawInputToCanvas(inputImage = this.state.inputImage) {
         // Set the canvas so that the text becomes the same size as the input image
+        let inputRatio = inputImage.width / inputImage.height;
         let scaledImage = {
             width: this.state.columns,
-            height: this.state.charHeight * this.state.charRatio,
+            height: this.state.columns * (1/this.state.charRatio) * (1/inputRatio),
         }
-        this.canvas.width = this.state.columns;
-        this.canvas.height = this.canvas.width * 
-        // Ratio of height to width of input image
-        (inputImage.height / inputImage.width)  *
-        // Ratio of height to width of char
-        (1/this.state.charRatio);
+        console.log(scaledImage);
+        this.canvas.width = scaledImage.width;
+        this.canvas.height = scaledImage.height;
 
         this.ctx.drawImage(inputImage, 0, 0, scaledImage.width, scaledImage.height);
         this.setState({
@@ -57,9 +69,26 @@ class App extends Component {
                 <div id="container">
                     <div id="control-panel">
                         <label htmlFor="img-upload" id="img-upload-label">Upload Image: </label>
-                        <input type="file" id="img-upload" name="img-upload" accept="image/*" style={{opacity: 0}}></input>
+                        <input 
+                            type="file" 
+                            id="img-upload" 
+                            name="img-upload" 
+                            accept="image/*" 
+                            style={{opacity: 0}} 
+                            onChange={this.handleImageUpload} 
+                            ref={this.fileInput}
+                        ></input>
+
                         <label htmlFor="columns">Columns: </label>
-                        <input type="range" min="80" max="800" value={this.state.columns} id="columns" name="columns" onChange={this.handleColumns}></input>
+                        <input 
+                            type="range" 
+                            min="80" 
+                            max="800" 
+                            value={this.state.columns} 
+                            id="columns" 
+                            name="columns" 
+                            onChange={this.handleColumns}
+                        ></input>
                     </div>
                     <div id="viewport">
                         <pre id="output">
