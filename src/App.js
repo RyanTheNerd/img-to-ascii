@@ -41,7 +41,7 @@ class App extends Component {
     render() {
         return (
             <div className="App">
-                <h1>Image to ASCII</h1>
+                <h1 className="foo">Image to ASCII</h1>
                 <div id="container">
                     <div id="control-panel">
                         <label htmlFor="img-upload" id="img-upload-label">Upload Image: </label>
